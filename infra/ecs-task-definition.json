@@ -1,0 +1,80 @@
+{
+  "family": "manewax-web",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::831869585621:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "manewax-web",
+      "image": "831869585621.dkr.ecr.us-west-2.amazonaws.com/manewax:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
+          "name": "PORT",
+          "value": "3000"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/DATABASE_URL"
+        },
+        {
+          "name": "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"
+        },
+        {
+          "name": "CLERK_SECRET_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/CLERK_SECRET_KEY"
+        },
+        {
+          "name": "STRIPE_SECRET_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/STRIPE_SECRET_KEY"
+        },
+        {
+          "name": "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY"
+        },
+        {
+          "name": "STRIPE_WEBHOOK_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/STRIPE_WEBHOOK_SECRET"
+        },
+        {
+          "name": "STRIPE_PROMO_EARLYBIRD_ID",
+          "valueFrom": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/STRIPE_PROMO_EARLYBIRD_ID"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/manewax-web",
+          "awslogs-region": "us-west-2",
+          "awslogs-stream-prefix": "ecs",
+          "awslogs-create-group": "true"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "wget -qO- http://localhost:3000/api/test-db || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}

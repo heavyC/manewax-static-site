@@ -1,0 +1,34 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowReadManewaxSecrets",
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": "arn:aws:secretsmanager:us-west-2:831869585621:secret:manewax/*"
+    },
+    {
+      "Sid": "AllowCreateEcsLogGroup",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup"
+      ],
+      "Resource": "arn:aws:logs:us-west-2:831869585621:log-group:/ecs/manewax-web*"
+    },
+    {
+      "Sid": "AllowKmsDecryptForSecretsManager",
+      "Effect": "Allow",
+      "Action": [
+        "kms:Decrypt"
+      ],
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "kms:ViaService": "secretsmanager.us-west-2.amazonaws.com"
+        }
+      }
+    }
+  ]
+}
