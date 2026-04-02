@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:api": "tsx server/local-api.ts",
     "build": "next build",
     "build:lambda": "esbuild server/lambda/handler.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist-lambda/handler.cjs",
     "package:lambda": "npm run build:lambda && cd dist-lambda && zip -q function.zip handler.cjs",

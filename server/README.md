@@ -22,6 +22,18 @@ Deploy these handlers behind API Gateway/Lambda or another small Node runtime, t
 NEXT_PUBLIC_API_BASE_URL=https://api.example.com/api
 ```
 
+For local development, run the local API in a second terminal:
+
+```bash
+npm run dev:api
+```
+
+Then run the frontend normally:
+
+```bash
+npm run dev
+```
+
 ## Included AWS helpers
 
 ```bash
