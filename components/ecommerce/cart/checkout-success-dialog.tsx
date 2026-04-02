@@ -13,6 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+const DISMISSED_CHECKOUT_SUCCESS_KEY = "manewax_dismissed_checkout_success";
+
 export function CheckoutSuccessDialog() {
   const router = useRouter();
   const pathname = usePathname();
@@ -20,11 +22,22 @@ export function CheckoutSuccessDialog() {
   const { isReady, clearCartAfterCheckout } = useCart();
   const hasClearedCartRef = useRef(false);
   const isCheckoutSuccess = searchParams.get("checkout") === "success";
-  const [open, setOpen] = useState(isCheckoutSuccess);
+  const sessionId = searchParams.get("session_id")?.trim() || "";
+  const successToken = sessionId || `${pathname}?checkout=success`;
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setOpen(isCheckoutSuccess);
-  }, [isCheckoutSuccess]);
+    if (!isCheckoutSuccess) {
+      setOpen(false);
+      return;
+    }
+
+    const dismissedToken = typeof window === "undefined"
+      ? null
+      : window.sessionStorage.getItem(DISMISSED_CHECKOUT_SUCCESS_KEY);
+
+    setOpen(dismissedToken !== successToken);
+  }, [isCheckoutSuccess, successToken]);
 
   useEffect(() => {
     if (!isCheckoutSuccess) {
@@ -41,6 +54,12 @@ export function CheckoutSuccessDialog() {
   }, [clearCartAfterCheckout, isCheckoutSuccess, isReady]);
 
   function closeDialog() {
+    setOpen(false);
+
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(DISMISSED_CHECKOUT_SUCCESS_KEY, successToken);
+    }
+
     const params = new URLSearchParams(searchParams.toString());
     params.delete("checkout");
     params.delete("session_id");
@@ -62,13 +81,11 @@ export function CheckoutSuccessDialog() {
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-lg" showCloseButton={false}>
         <DialogHeader className="gap-3 text-center sm:text-center">
-          <DialogTitle className="text-3xl font-semibold tracking-tight">Thank You!</DialogTitle>
-          <DialogDescription className="text-xl leading-7 text-foreground">
-            Thank you for supporting small woman owned businesses! 
+          <DialogTitle className="text-3xl font-semibold tracking-tight">Order Confirmed</DialogTitle>
+          <DialogDescription className="text-xl leading-7 text-foreground text-center">
+            Thank you for your order. Your payment was successful, and we&apos;re preparing your items now.
             <br />
-            Your order has been received and is being processed. You will receive a confirmation email shortly with your order details.
-            <br />
-            Please allow 1-2 weeks for delivery.
+            A confirmation email with your order details will arrive shortly. Please allow 1 to 2 weeks for delivery.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="justify-center border-t-0 bg-transparent p-0 pt-2 sm:justify-center">
