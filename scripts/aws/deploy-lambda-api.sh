@@ -10,6 +10,55 @@ API_NAME="${API_NAME:-manewax-http-api}"
 ENV_FILE="${ENV_FILE:-.env.production}"
 ZIP_FILE="dist-lambda/function.zip"
 
+wait_for_lambda_ready() {
+  local function_name="$1"
+  local max_attempts="${2:-60}"
+  local attempt=1
+
+  echo "Waiting for Lambda to become ready: ${function_name}"
+
+  while (( attempt <= max_attempts )); do
+    local state
+    local last_update_status
+    local last_update_reason
+
+    state=$(aws lambda get-function-configuration \
+      --function-name "$function_name" \
+      --region "$AWS_REGION" \
+      --query 'State' \
+      --output text 2>/dev/null || echo "Unknown")
+
+    last_update_status=$(aws lambda get-function-configuration \
+      --function-name "$function_name" \
+      --region "$AWS_REGION" \
+      --query 'LastUpdateStatus' \
+      --output text 2>/dev/null || echo "Unknown")
+
+    last_update_reason=$(aws lambda get-function-configuration \
+      --function-name "$function_name" \
+      --region "$AWS_REGION" \
+      --query 'LastUpdateStatusReason' \
+      --output text 2>/dev/null || true)
+
+    if [[ "$state" == "Active" && "$last_update_status" == "Successful" ]]; then
+      echo "Lambda is ready."
+      return 0
+    fi
+
+    if [[ "$last_update_status" == "Failed" ]]; then
+      echo "Lambda update failed: ${last_update_reason:-unknown reason}" >&2
+      return 1
+    fi
+
+    echo "  still updating... state=${state}, last_update_status=${last_update_status}"
+    sleep 5
+    ((attempt++))
+  done
+
+  echo "Timed out waiting for Lambda to become ready: ${function_name}" >&2
+  return 1
+}
+
 echo " LAMBDA_FUNCTION_NAME: $LAMBDA_FUNCTION_NAME"
 echo " LAMBDA_ROLE_NAME: $LAMBDA_ROLE_NAME"
 echo " API_NAME: $API_NAME"
@@ -60,10 +109,14 @@ PY
 )
 
 if aws lambda get-function --function-name "$LAMBDA_FUNCTION_NAME" --region "$AWS_REGION" >/dev/null 2>&1; then
+  wait_for_lambda_ready "$LAMBDA_FUNCTION_NAME"
+
   aws lambda update-function-code \
     --function-name "$LAMBDA_FUNCTION_NAME" \
     --zip-file "fileb://${ZIP_FILE}" \
     --region "$AWS_REGION" >/dev/null
+
+  wait_for_lambda_ready "$LAMBDA_FUNCTION_NAME"
 
   aws lambda update-function-configuration \
     --function-name "$LAMBDA_FUNCTION_NAME" \
@@ -75,6 +128,7 @@ if aws lambda get-function --function-name "$LAMBDA_FUNCTION_NAME" --region "$AW
     --environment "$ENVIRONMENT_JSON" \
     --region "$AWS_REGION" >/dev/null
 
+  wait_for_lambda_ready "$LAMBDA_FUNCTION_NAME"
   echo "Updated Lambda function: $LAMBDA_FUNCTION_NAME"
 else
   aws lambda create-function \
@@ -88,6 +142,7 @@ else
     --zip-file "fileb://${ZIP_FILE}" \
     --region "$AWS_REGION" >/dev/null
 
+  wait_for_lambda_ready "$LAMBDA_FUNCTION_NAME"
   echo "Created Lambda function: $LAMBDA_FUNCTION_NAME"
 fi
 
