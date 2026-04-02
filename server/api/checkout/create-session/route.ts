@@ -152,6 +152,13 @@ export async function POST(request: Request) {
       line_items: lineItems,
       success_url: successUrl,
       cancel_url: cancelUrl,
+      shipping_address_collection: {
+        allowed_countries: ["US"],
+      },
+      billing_address_collection: "auto",
+      phone_number_collection: {
+        enabled: true,
+      },
       discounts: stripePromotionCodeId ? [{ promotion_code: stripePromotionCodeId }] : undefined,
       metadata: {
         promoCode: resolvedPromoCode ?? "",
