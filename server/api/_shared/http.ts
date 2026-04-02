@@ -58,7 +58,13 @@ export function withCors(response: Response, request?: Request) {
 }
 
 export function jsonResponse(body: unknown, init?: ResponseInit, request?: Request) {
-  return withCors(Response.json(body, init), request);
+  const headers = new Headers(init?.headers);
+
+  if (!headers.has("Cache-Control")) {
+    headers.set("Cache-Control", "no-store");
+  }
+
+  return withCors(Response.json(body, { ...init, headers }), request);
 }
 
 export function noContent(request?: Request) {

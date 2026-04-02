@@ -63,8 +63,12 @@ export function CheckoutSuccessDialog() {
       <DialogContent className="sm:max-w-lg" showCloseButton={false}>
         <DialogHeader className="gap-3 text-center sm:text-center">
           <DialogTitle className="text-3xl font-semibold tracking-tight">Thank You!</DialogTitle>
-          <DialogDescription className="text-base leading-7 text-muted-foreground">
-            Thank you for supporting small woman owned businesses. Please allow 1-2 weeks for delivery.
+          <DialogDescription className="text-xl leading-7 text-foreground">
+            Thank you for supporting small woman owned businesses! 
+            <br />
+            Your order has been received and is being processed. You will receive a confirmation email shortly with your order details.
+            <br />
+            Please allow 1-2 weeks for delivery.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="justify-center border-t-0 bg-transparent p-0 pt-2 sm:justify-center">

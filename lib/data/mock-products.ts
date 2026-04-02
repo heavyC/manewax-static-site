@@ -24,7 +24,7 @@ export const mockCategories = [
 export const mockProducts: Product[] = [
     {
         id: 1,
-        name: "Itch Prevention and Repellent Bar",
+        name: "mock Itch Prevention and Repellent Bar",
         slug: "mane-itch-prevention-and-repellent-bar",
         description: "Hand-crafted conditioning wax that soothes itches and repels insects.",
         price: 34.99,
@@ -40,7 +40,7 @@ export const mockProducts: Product[] = [
     },
     {
         id: 2,
-        name: "Lavender Braiding Bar",
+        name: "mock Lavender Braiding Bar",
         slug: "lavender-braiding-bar",
         description: "Hand-crafted braiding wax with soothing lavendar scent.",
         price: 37.99,
@@ -56,7 +56,7 @@ export const mockProducts: Product[] = [
     },
     {
         id: 2,
-        name: "Tick Repellent Bar",
+        name: "mock Tick Repellent Bar",
         slug: "tick-repellent-bar",
         description: "Hand-crafted tick repellent bar.",
         price: 37.99,
