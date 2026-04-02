@@ -26,7 +26,8 @@ async function getProducts(): Promise<Product[]> {
       LEFT JOIN product_images i ON i.product_id = p.id
       WHERE p.status IN ('active', 'coming_soon')
       GROUP BY p.id
-      ORDER BY p.created_at DESC
+      ORDER BY 
+        CASE WHEN p.status = 'coming_soon' THEN 1 ELSE 0 END
     `;
     return products as Product[];
   } catch (error) {
@@ -86,8 +87,8 @@ export default function Shop() {
         <CheckoutSuccessDialog />
       </Suspense>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-4">Shop</h1>
-        <p className="text-muted-foreground text-lg">
+        {/* <h1 className="text-3xl font-bold mb-4">Shop</h1> */}
+        <p className="text-foreground font-bold text-2xl text-center">
           Premium handmade wax products for equine care. Trusted by riders, owners, and groomers.
         </p>
       </div>

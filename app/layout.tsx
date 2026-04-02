@@ -60,12 +60,13 @@ export default function RootLayout({
                 </div>
 
                 <nav className="hidden md:flex items-center justify-self-center space-x-6">
-                  <Link href="/shop" className="text-sm font-medium text-slate-700 hover:text-slate-900">
+                  {/* <Link href="/shop" className="text-sm font-medium text-slate-700 hover:text-slate-900">
                     Shop
                   </Link>
                   <Link href="/resources" className="text-sm font-medium text-slate-700 hover:text-slate-900">
                     Resources
-                  </Link>
+                  </Link> */}
+                  Welcome to Kari's Grooming Room!
                 </nav>
 
                 <div className="flex items-center justify-self-end space-x-3">
