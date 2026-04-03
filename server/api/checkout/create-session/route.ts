@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
     const products = await sql.query(
       `
-        SELECT id, name, description, price, status
+        SELECT id, name, description, price, sku, status
         FROM products
         WHERE id = ANY($1::int[]) AND status = 'active'
       `,
@@ -81,11 +81,13 @@ export async function POST(request: Request) {
       name: string;
       description: string | null;
       price: string;
+      sku: string | null;
     }>;
 
-    const productById = new Map<number, { id: number; name: string; description: string | null; price: string }>(
-      productRows.map((product) => [product.id, product])
-    );
+    const productById = new Map<
+      number,
+      { id: number; name: string; description: string | null; price: string; sku: string | null }
+    >(productRows.map((product) => [product.id, product]));
 
     const lineItems: Array<{
       price_data: {
@@ -93,6 +95,10 @@ export async function POST(request: Request) {
         product_data: {
           name: string;
           description?: string;
+          metadata: {
+            productId: string;
+            sku: string;
+          };
         };
         unit_amount: number;
       };
@@ -116,6 +122,10 @@ export async function POST(request: Request) {
           product_data: {
             name: product.name,
             description: product.description ?? undefined,
+            metadata: {
+              productId: String(product.id),
+              sku: product.sku ?? "",
+            },
           },
           unit_amount: unitAmount,
         },
@@ -152,6 +162,7 @@ export async function POST(request: Request) {
       line_items: lineItems,
       success_url: successUrl,
       cancel_url: cancelUrl,
+      customer_creation: "always",
       shipping_address_collection: {
         allowed_countries: ["US"],
       },

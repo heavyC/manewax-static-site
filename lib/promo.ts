@@ -119,9 +119,25 @@ export async function recordPromoUsage(params: {
   email?: string | null;
   amountDiscounted: number;
   userId?: string | null;
+  orderId?: number | null;
 }) {
   const sql = getSqlClient();
   const normalizedCode = params.code.trim().toUpperCase();
+
+  const existingUsage = await sql.query(
+    `SELECT id FROM promo_usages WHERE stripe_session_id = $1 LIMIT 1`,
+    [params.stripeSessionId]
+  );
+
+  if (existingUsage.length > 0) {
+    if (params.orderId) {
+      await sql.query(
+        `UPDATE promo_usages SET order_id = COALESCE(order_id, $1) WHERE id = $2`,
+        [params.orderId, existingUsage[0].id]
+      );
+    }
+    return;
+  }
 
   const promoRows = await sql.query(
     `SELECT id FROM promos WHERE code = $1 LIMIT 1`,
@@ -137,14 +153,16 @@ export async function recordPromoUsage(params: {
         user_id,
         email,
         stripe_session_id,
+        order_id,
         amount_discounted
-      ) VALUES ($1, $2, $3, $4, $5)
+      ) VALUES ($1, $2, $3, $4, $5, $6)
     `,
     [
       promoId,
       params.userId ?? null,
       params.email ?? null,
       params.stripeSessionId,
+      params.orderId ?? null,
       params.amountDiscounted.toFixed(2),
     ]
   );
