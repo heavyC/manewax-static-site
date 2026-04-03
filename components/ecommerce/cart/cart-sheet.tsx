@@ -11,7 +11,6 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { CartButton } from "@/components/ecommerce/cart/cart-button";
@@ -41,9 +40,13 @@ export function CartSheet() {
   } = useCart();
   const [open, setOpen] = useState(false);
 
+  const isCartOpenFromQuery = searchParams.get("cart") === "open";
+
   useEffect(() => {
-    setOpen(searchParams.get("cart") === "open");
-  }, [searchParams]);
+    if (isCartOpenFromQuery) {
+      setOpen(true);
+    }
+  }, [isCartOpenFromQuery]);
 
   useEffect(() => {
     const promoFromQuery = searchParams.get("promo")?.trim();
@@ -55,12 +58,12 @@ export function CartSheet() {
   function handleOpenChange(nextOpen: boolean) {
     setOpen(nextOpen);
 
-    const params = new URLSearchParams(searchParams.toString());
-    if (nextOpen) {
-      params.set("cart", "open");
-    } else {
-      params.delete("cart");
+    if (nextOpen || !isCartOpenFromQuery) {
+      return;
     }
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("cart");
 
     const query = params.toString();
     router.replace(`${pathname}${query ? `?${query}` : ""}`, { scroll: false });
@@ -72,11 +75,9 @@ export function CartSheet() {
 
   return (
     <Sheet open={open} onOpenChange={handleOpenChange}>
-      <SheetTrigger asChild>
-        <div>
-          <CartButton itemCount={itemCount} />
-        </div>
-      </SheetTrigger>
+      <div>
+        <CartButton itemCount={itemCount} onOpenCart={() => setOpen(true)} />
+      </div>
       <SheetContent side="right" className="w-full sm:max-w-md">
         <SheetHeader>
           <SheetTitle>Shopping Cart</SheetTitle>
