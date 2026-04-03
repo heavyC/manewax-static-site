@@ -1,7 +1,8 @@
 import "dotenv/config";
 import Stripe from "stripe";
 
-const PROMO_CODE = "EARLYBIRD_DISCOUNT";
+const PUBLIC_PROMO_CODE = "EARLYBIRD_DISCOUNT";
+const STRIPE_PROMO_CODE = "EARLYBIRDDISCOUNT";
 
 async function main() {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -11,7 +12,7 @@ async function main() {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
   let coupon = (await stripe.coupons.list({ limit: 100 })).data.find(
-    (entry) => entry.percent_off === 10 && entry.metadata?.managed_code === PROMO_CODE
+    (entry) => entry.percent_off === 10 && entry.metadata?.managed_code === PUBLIC_PROMO_CODE
   );
 
   if (!coupon) {
@@ -20,13 +21,13 @@ async function main() {
       duration: "once",
       name: "Earlybird 10%",
       metadata: {
-        managed_code: PROMO_CODE,
+        managed_code: PUBLIC_PROMO_CODE,
       },
     });
   }
 
-  let promotionCode = (await stripe.promotionCodes.list({ code: PROMO_CODE, active: true, limit: 10 })).data.find(
-    (entry) => entry.code === PROMO_CODE && entry.metadata?.managed_code === PROMO_CODE
+  let promotionCode = (await stripe.promotionCodes.list({ code: STRIPE_PROMO_CODE, active: true, limit: 10 })).data.find(
+    (entry) => entry.code === STRIPE_PROMO_CODE && entry.metadata?.managed_code === PUBLIC_PROMO_CODE
   );
 
   if (!promotionCode) {
@@ -35,10 +36,10 @@ async function main() {
         type: "coupon",
         coupon: coupon.id,
       },
-      code: PROMO_CODE,
+      code: STRIPE_PROMO_CODE,
       active: true,
       metadata: {
-        managed_code: PROMO_CODE,
+        managed_code: PUBLIC_PROMO_CODE,
       },
     });
   }

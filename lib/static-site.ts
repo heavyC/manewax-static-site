@@ -22,8 +22,11 @@ export function resolveStaticPromo(code: string): StaticPromoFallback | null {
   const fallbackCode = (process.env.NEXT_PUBLIC_FALLBACK_PROMO_CODE ?? "EARLYBIRD_DISCOUNT")
     .trim()
     .toUpperCase();
+  const alternateFallbackCode = (process.env.NEXT_PUBLIC_FALLBACK_PROMO_ALIAS ?? "EARLYBIRDDISCOUNT")
+    .trim()
+    .toUpperCase();
 
-  if (!normalizedCode || normalizedCode !== fallbackCode) {
+  if (!normalizedCode || (normalizedCode !== fallbackCode && normalizedCode !== alternateFallbackCode)) {
     return null;
   }
 

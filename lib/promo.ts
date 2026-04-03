@@ -2,6 +2,17 @@ import { neon } from "@neondatabase/serverless";
 import { stripe } from "@/lib/stripe";
 
 export const EARLYBIRD_PROMO_CODE = "EARLYBIRD_DISCOUNT";
+export const EARLYBIRD_STRIPE_PROMO_CODE = "EARLYBIRDDISCOUNT";
+
+function normalizePromoAlias(code: string) {
+  const normalizedCode = code.trim().toUpperCase();
+
+  if (normalizedCode === EARLYBIRD_PROMO_CODE || normalizedCode === EARLYBIRD_STRIPE_PROMO_CODE) {
+    return EARLYBIRD_PROMO_CODE;
+  }
+
+  return normalizedCode;
+}
 
 export type ResolvedPromo = {
   code: string;
@@ -31,7 +42,7 @@ async function resolveEarlybirdPromotionCodeId() {
   }
 
   const promotionCodes = await stripe.promotionCodes.list({
-    code: EARLYBIRD_PROMO_CODE,
+    code: EARLYBIRD_STRIPE_PROMO_CODE,
     active: true,
     limit: 10,
   });
@@ -39,14 +50,14 @@ async function resolveEarlybirdPromotionCodeId() {
   const managed = promotionCodes.data.find(
     (promotionCode) =>
       promotionCode.metadata?.managed_code === EARLYBIRD_PROMO_CODE ||
-      promotionCode.code === EARLYBIRD_PROMO_CODE
+      promotionCode.code === EARLYBIRD_STRIPE_PROMO_CODE
   );
 
   return managed?.id;
 }
 
 export async function resolvePromoByCode(code: string): Promise<ResolvedPromo | null> {
-  const normalizedCode = code.trim().toUpperCase();
+  const normalizedCode = normalizePromoAlias(code);
   const sql = getSqlClient();
 
   const promoRows = await sql.query(
@@ -122,7 +133,7 @@ export async function recordPromoUsage(params: {
   orderId?: number | null;
 }) {
   const sql = getSqlClient();
-  const normalizedCode = params.code.trim().toUpperCase();
+  const normalizedCode = normalizePromoAlias(params.code);
 
   const existingUsage = await sql.query(
     `SELECT id FROM promo_usages WHERE stripe_session_id = $1 LIMIT 1`,
