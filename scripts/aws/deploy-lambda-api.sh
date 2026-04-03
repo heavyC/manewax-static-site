@@ -84,6 +84,9 @@ if [[ -z "${ALLOWED_ORIGIN:-}" ]]; then
   export ALLOWED_ORIGIN="$NEXT_PUBLIC_APP_URL"
 fi
 
+API_CORS_ORIGINS="$ALLOWED_ORIGIN"
+API_CORS_CONFIGURATION="AllowOrigins=${API_CORS_ORIGINS},AllowMethods=GET,POST,PATCH,DELETE,OPTIONS,AllowHeaders=content-type,authorization,stripe-signature,x-cart-session-id,x-user-id,x-clerk-user-id,AllowCredentials=true"
+
 npm run package:lambda
 
 ROLE_ARN="${LAMBDA_ROLE_ARN:-arn:aws:iam::${AWS_ACCOUNT_ID}:role/${LAMBDA_ROLE_NAME}}"
@@ -155,7 +158,7 @@ if [[ -z "$API_ID" || "$API_ID" == "None" ]]; then
   API_ID=$(aws apigatewayv2 create-api \
     --name "$API_NAME" \
     --protocol-type HTTP \
-    --cors-configuration AllowOrigins="$NEXT_PUBLIC_APP_URL",AllowMethods="GET,POST,PATCH,DELETE,OPTIONS",AllowHeaders="content-type,authorization,stripe-signature,x-cart-session-id,x-user-id,x-clerk-user-id" \
+    --cors-configuration "$API_CORS_CONFIGURATION" \
     --region "$AWS_REGION" \
     --query 'ApiId' \
     --output text)
@@ -170,6 +173,13 @@ if [[ -z "$API_ID" || "$API_ID" == "None" ]]; then
 else
   echo "Using existing HTTP API: $API_NAME ($API_ID)"
 fi
+
+aws apigatewayv2 update-api \
+  --api-id "$API_ID" \
+  --cors-configuration "$API_CORS_CONFIGURATION" \
+  --region "$AWS_REGION" >/dev/null
+
+echo "Synced HTTP API CORS origins: $API_CORS_ORIGINS"
 
 LAMBDA_URI="arn:aws:apigateway:${AWS_REGION}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:function:${LAMBDA_FUNCTION_NAME}/invocations"
 INTEGRATION_ID=$(aws apigatewayv2 get-integrations \
