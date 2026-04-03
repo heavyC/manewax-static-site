@@ -104,9 +104,11 @@ export default function CheckoutPage() {
       }
 
       const currentUrl = new URL(window.location.href);
-      const query = currentUrl.search ? currentUrl.search : "";
-      const cancelUrl = `${currentUrl.origin}${currentUrl.pathname}${query}`;
-      const successUrl = `${currentUrl.origin}/checkout/success${query}`;
+      const params = new URLSearchParams(currentUrl.search);
+      params.set("cart", "open");
+      const query = params.toString();
+      const cancelUrl = `${currentUrl.origin}/shop${query ? `?${query}` : ""}`;
+      const successUrl = `${currentUrl.origin}/checkout/success${currentUrl.search}`;
 
       const response = await fetch(buildApiUrl("/checkout/create-session"), {
         method: "POST",
@@ -126,7 +128,7 @@ export default function CheckoutPage() {
         return;
       }
 
-      window.location.href = data.url;
+      window.location.replace(data.url);
     } catch {
       setErrorMessage("Unable to start checkout. Configure your checkout API for static hosting.");
     } finally {

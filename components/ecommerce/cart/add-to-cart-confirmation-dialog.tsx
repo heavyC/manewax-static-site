@@ -36,7 +36,7 @@ export function AddToCartConfirmationDialog() {
           </Button>
           <Button
             type="button"
-            onClick={() => void checkoutFromCart()}
+            onClick={() => void checkoutFromCart({ openCartOnCancel: true })}
             disabled={isCheckingOut || isApplyingPromo}
           >
             {isCheckingOut ? "Redirecting..." : "Checkout"}

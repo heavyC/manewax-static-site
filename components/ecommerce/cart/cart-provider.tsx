@@ -471,7 +471,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       const query = params.toString();
-      const cancelUrl = `${window.location.origin}${window.location.pathname}${query ? `?${query}` : ""}`;
+      const cancelUrl = `${window.location.origin}/shop${query ? `?${query}` : ""}`;
       const successUrl = `${window.location.origin}/checkout/success${window.location.search}`;
       const persistedPromoCode = window.localStorage.getItem(PROMO_STORAGE_KEY)?.trim().toUpperCase();
 
@@ -496,7 +496,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
 
       setIsAddToCartConfirmOpen(false);
-      window.location.href = data.url;
+      window.location.replace(data.url);
     } catch {
       setError("Unable to start checkout. Configure your checkout API for static hosting.");
     } finally {
