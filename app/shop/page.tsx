@@ -48,7 +48,11 @@ export default async function Shop() {
 
       <div className="mb-8">
         <p className="text-foreground text-center text-2xl font-bold">
-          Premium handmade wax products for equine care. Trusted by riders, owners, and groomers.
+          Premium handmade wax products for equine care.
+          <br />
+          Trusted by riders, owners, and groomers.
+          <br />
+          Handmade in small batches.
         </p>
       </div>
 
