@@ -155,7 +155,7 @@ export async function POST(request: Request) {
       appUrl,
       "/shop?checkout=success"
     );
-    const cancelUrl = normalizeAppUrl(body.cancelUrl, appUrl, "/checkout");
+    const cancelUrl = normalizeAppUrl(body.cancelUrl, appUrl, "/shop?cart=open");
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
