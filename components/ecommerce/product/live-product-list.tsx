@@ -22,8 +22,8 @@ function ProductSkeleton() {
 }
 
 export function LiveProductList({ initialProducts }: { initialProducts: Product[] }) {
-  const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [isLoading, setIsLoading] = useState(initialProducts.length === 0);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -54,6 +54,7 @@ export function LiveProductList({ initialProducts }: { initialProducts: Product[
           return;
         }
 
+        setProducts(initialProducts);
         setError(loadError instanceof Error ? loadError.message : "Unable to refresh products right now.");
       } finally {
         if (isActive) {
@@ -71,9 +72,9 @@ export function LiveProductList({ initialProducts }: { initialProducts: Product[
       isActive = false;
       window.clearInterval(timer);
     };
-  }, []);
+  }, [initialProducts]);
 
-  if (isLoading && products.length === 0) {
+  if (isLoading) {
     return (
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {[...Array(6)].map((_, index) => (

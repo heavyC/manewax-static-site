@@ -66,7 +66,9 @@ export default function RootLayout({
                   <Link href="/resources" className="text-sm font-medium text-slate-700 hover:text-slate-900">
                     Resources
                   </Link> */}
-                  Welcome to Kari's Grooming Room!
+                  <span className="text-xl font-bold text-slate-800">
+                    Welcome to Kari's Grooming Room!
+                  </span>
                 </nav>
 
                 <div className="flex items-center justify-self-end space-x-3">
