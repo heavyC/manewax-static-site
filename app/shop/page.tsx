@@ -50,9 +50,9 @@ export default async function Shop() {
         <p className="text-foreground text-center text-2xl font-bold">
           Premium handmade wax products for equine care.
           <br />
-          Trusted by riders, owners, and groomers.
+          Veternarian formulated and handmade in small batches.
           <br />
-          Handmade in small batches.
+          Trusted by riders, owners, and groomers.
         </p>
       </div>
 
