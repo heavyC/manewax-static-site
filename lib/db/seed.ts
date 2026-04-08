@@ -39,7 +39,6 @@ const equineProducts = [
     ingredients: "Beeswax, Coconut Oil, Citronella Essential Oil, Tea Tree Oil, Vitamin E",
     usage: "Apply directly to affected areas or as a preventive measure. Safe for daily use.",
     status: 'active' as const,
-    isFeatured: true,
     categoryId: 3, // Grooming Essentials
   },
   {
@@ -54,7 +53,6 @@ const equineProducts = [
     ingredients: "Beeswax, Lanolin, Lavender Essential Oil, Coconut Oil, Shea Butter",
     usage: "Warm slightly in hands before application. Work through mane sections before braiding for best hold.",
     status: 'active' as const,
-    isFeatured: true,
     categoryId: 4, // Show Prep
   },
   {
@@ -69,7 +67,6 @@ const equineProducts = [
     ingredients: "Beeswax, Cedarwood Oil, Eucalyptus Oil, Neem Oil, Coconut Oil",
     usage: "Apply liberally to legs, belly, and other exposed areas. Reapply after heavy sweating or rain.",
     status: 'coming_soon' as const,
-    isFeatured: false,
     categoryId: 3, // Grooming Essentials
   }
 ];

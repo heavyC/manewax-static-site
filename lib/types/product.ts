@@ -7,7 +7,6 @@ export interface Product {
   description: string;
   price: number;
   shipping: number;
-  compare_at_price?: string;
   sku: string;
   stock_quantity: number;
   low_stock_threshold: number;

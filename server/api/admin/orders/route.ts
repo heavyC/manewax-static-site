@@ -94,9 +94,21 @@ function toOptionalString(value: unknown, maxLength: number) {
   return normalized.slice(0, maxLength);
 }
 
-async function listOrders() {
+function isMissingFulfillmentColumnError(error: unknown) {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  const message = error.message.toLowerCase();
+  return ["shipping_carrier", "tracking_number", "fulfilled_at"].some((column) =>
+    message.includes(column) && message.includes("does not exist")
+  );
+}
+
+async function queryOrders(includeFulfillmentFields: boolean) {
   const sql = getSql();
-  const rows = await sql.query(`
+
+  return sql.query(`
     SELECT
       o.id,
       o.order_number,
@@ -110,9 +122,9 @@ async function listOrders() {
       o.customer_email,
       o.customer_phone,
       o.shipping_address,
-      o.shipping_carrier,
-      o.tracking_number,
-      o.fulfilled_at,
+      ${includeFulfillmentFields ? "o.shipping_carrier," : "NULL::varchar AS shipping_carrier,"}
+      ${includeFulfillmentFields ? "o.tracking_number," : "NULL::varchar AS tracking_number,"}
+      ${includeFulfillmentFields ? "o.fulfilled_at," : "NULL::timestamp AS fulfilled_at,"}
       o.customer_notes,
       o.internal_notes,
       o.created_at,
@@ -143,6 +155,20 @@ async function listOrders() {
       END,
       o.created_at DESC
   `);
+}
+
+async function listOrders() {
+  let rows: Array<Record<string, unknown>>;
+
+  try {
+    rows = await queryOrders(true) as Array<Record<string, unknown>>;
+  } catch (error) {
+    if (!isMissingFulfillmentColumnError(error)) {
+      throw error;
+    }
+
+    rows = await queryOrders(false) as Array<Record<string, unknown>>;
+  }
 
   return rows.map((row: Record<string, unknown>) => {
     const items = Array.isArray(row.items)

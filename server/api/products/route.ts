@@ -18,7 +18,6 @@ export async function GET(request: Request) {
         p.slug,
         p.description,
         p.price,
-        p.compare_at_price,
         p.sku,
         p.stock_quantity,
         p.low_stock_threshold,

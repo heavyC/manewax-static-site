@@ -110,11 +110,6 @@ export function LiveProductDetail({ slug, initialProduct }: { slug: string; init
 
           <div className="text-3xl font-bold text-primary">
             ${product.price}
-            {product.compare_at_price && (
-              <span className="ml-2 text-lg text-muted-foreground line-through">
-                ${product.compare_at_price}
-              </span>
-            )}
           </div>
 
           {error && <p className="text-sm text-muted-foreground">{error}</p>}

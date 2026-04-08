@@ -11,12 +11,10 @@ export const products = pgTable("products", {
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   description: text("description"),
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-  compareAtPrice: decimal("compare_at_price", { precision: 10, scale: 2 }),
   sku: varchar("sku", { length: 100 }),
   stockQuantity: integer("stock_quantity").default(0).notNull(),
   lowStockThreshold: integer("low_stock_threshold").default(10),
   status: productStatusEnum("status").default("active").notNull(),
-  isFeatured: boolean("is_featured").default(false).notNull(),
   categoryId: integer("category_id").references(() => categories.id),
   // Equine-specific fields
   weight: decimal("weight", { precision: 8, scale: 2 }), // For shipping calculations

@@ -50,7 +50,6 @@ async function seedWithRawSQL() {
         ingredients: "Beeswax, Coconut Oil, Citronella Essential Oil, Tea Tree Oil, Vitamin E",
         usage: "Apply directly to affected areas or as a preventive measure. Safe for daily use.",
         status: 'active',
-        isFeatured: true,
         categorySlug: "grooming-essentials"
       },
       {
@@ -65,7 +64,6 @@ async function seedWithRawSQL() {
         ingredients: "Beeswax, Lanolin, Lavender Essential Oil, Coconut Oil, Shea Butter",
         usage: "Warm slightly in hands before application. Work through mane sections before braiding for best hold.",
         status: 'active',
-        isFeatured: true,
         categorySlug: "show-prep"
       },
       {
@@ -80,7 +78,6 @@ async function seedWithRawSQL() {
         ingredients: "Beeswax, Cedarwood Oil, Eucalyptus Oil, Neem Oil, Coconut Oil",
         usage: "Apply liberally to legs, belly, and other exposed areas.",
         status: 'coming_soon',
-        isFeatured: false,
         categorySlug: "grooming-essentials"
       }
     ];
@@ -91,11 +88,11 @@ async function seedWithRawSQL() {
       await sql`
         INSERT INTO products (
           name, slug, description, price, sku, stock_quantity, 
-          weight, dimensions, ingredients, usage, status, is_featured, category_id
+          weight, dimensions, ingredients, usage, status, category_id
         ) VALUES (
           ${product.name}, ${product.slug}, ${product.description}, ${product.price}, 
           ${product.sku}, ${product.stockQuantity}, ${product.weight}, ${product.dimensions}, 
-          ${product.ingredients}, ${product.usage}, ${product.status}, ${product.isFeatured}, ${categoryId}
+          ${product.ingredients}, ${product.usage}, ${product.status}, ${categoryId}
         )
       `;
       console.log(`✓ Inserted product: ${product.name}`);
