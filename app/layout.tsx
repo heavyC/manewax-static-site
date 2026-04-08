@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/components/ecommerce/cart/cart-provider";
 import { CartSheet } from "@/components/ecommerce/cart/cart-sheet";
 import { AddToCartConfirmationDialog } from "@/components/ecommerce/cart/add-to-cart-confirmation-dialog";
+import { OptionalClerkProvider } from "@/components/auth/optional-clerk-provider";
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
@@ -42,9 +43,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CartProvider>
-          <TooltipProvider>
-            <header className="border-b bg-white">
+        <OptionalClerkProvider>
+          <CartProvider>
+            <TooltipProvider>
+              <header className="border-b bg-white">
               <div className="container mx-auto grid h-16 grid-cols-[1fr_auto_1fr] items-center px-4">
                 <div className="justify-self-start">
                   <Link href="/" className="flex items-center space-x-2">
@@ -66,10 +68,10 @@ export default function RootLayout({
                   <Link href="/resources" className="text-sm font-medium text-slate-700 hover:text-slate-900">
                     Resources
                   </Link> */}
-                  <span className="text-xl font-bold text-slate-800">
+                  <span className="text-lg font-bold text-slate-800">
                     Welcome to Kari's Grooming Room!
                   </span>
-                </nav>
+                </nav>  
 
                 <div className="flex items-center justify-self-end space-x-3">
                   <Suspense>
@@ -79,11 +81,12 @@ export default function RootLayout({
                 </div>
               </div>
             </header>
-            <main className="flex-1">
-              {children}
-            </main>
-          </TooltipProvider>
-        </CartProvider>
+              <main className="flex-1">
+                {children}
+              </main>
+            </TooltipProvider>
+          </CartProvider>
+        </OptionalClerkProvider>
       </body>
     </html>
   );

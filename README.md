@@ -144,6 +144,34 @@ This application includes standard ecommerce functionality:
 - **Order Processing**: Checkout flow, payment integration, order tracking
 - **Admin Dashboard**: Product management, order fulfillment, analytics
 
+## Owner Fulfillment Dashboard
+
+A minimal password-protected fulfillment dashboard is now available at:
+
+```text
+/dashboard/
+```
+
+It is designed for a simple workflow and includes:
+
+- **Open vs fulfilled order views**
+- **Returned and refunded order states**
+- **Per-order item visibility** with product names, quantities, and totals
+- **Shipping details** needed to pack and mail orders
+- **Admin-only updates** for status, carrier, tracking, and internal notes
+- **Viewer access** for read-only order visibility
+
+### Clerk role setup
+
+Owner logins are managed by **Clerk**. To grant access, assign one of these role values in the user’s Clerk metadata:
+
+- `dashboardRole: "admin"`
+- `dashboardRole: "viewer"`
+
+The dashboard also accepts `role` with the same values if you prefer that naming. Users without one of those roles are blocked from the dashboard.
+
+> After pulling these changes, run `npm run db:migrate` so the new fulfillment fields are added to the `orders` table.
+
 ## Development Commands
 
 ```bash

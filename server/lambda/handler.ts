@@ -1,4 +1,5 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
+import * as adminOrdersRoute from "@/server/api/admin/orders/route";
 import * as cartRoute from "@/server/api/cart/route";
 import * as createSessionRoute from "@/server/api/checkout/create-session/route";
 import * as validatePromoRoute from "@/server/api/checkout/validate-promo/route";
@@ -15,6 +16,8 @@ type RouteMatch = {
 };
 
 const routes: RouteMatch[] = [
+  { method: "GET", pattern: /^\/api\/admin\/orders\/?$/, handler: (request) => adminOrdersRoute.GET(request) },
+  { method: "PATCH", pattern: /^\/api\/admin\/orders\/?$/, handler: (request) => adminOrdersRoute.PATCH(request) },
   { method: "GET", pattern: /^\/api\/cart\/?$/, handler: (request) => cartRoute.GET(request) },
   { method: "POST", pattern: /^\/api\/cart\/?$/, handler: (request) => cartRoute.POST(request) },
   { method: "PATCH", pattern: /^\/api\/cart\/?$/, handler: (request) => cartRoute.PATCH(request) },

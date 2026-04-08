@@ -6,10 +6,11 @@ import { products } from "./products";
 
 export const orderStatusEnum = pgEnum("order_status", [
   "pending",
-  "confirmed", 
+  "confirmed",
   "processing",
   "shipped",
   "delivered",
+  "returned",
   "cancelled",
   "refunded"
 ]);
@@ -47,7 +48,12 @@ export const orders = pgTable("orders", {
   // Payment
   paymentMethod: varchar("payment_method", { length: 100 }),
   paymentReference: varchar("payment_reference", { length: 255 }), // Stripe payment intent ID
-  
+
+  // Fulfillment
+  shippingCarrier: varchar("shipping_carrier", { length: 120 }),
+  trackingNumber: varchar("tracking_number", { length: 120 }),
+  fulfilledAt: timestamp("fulfilled_at"),
+
   // Notes
   customerNotes: text("customer_notes"),
   internalNotes: text("internal_notes"),
