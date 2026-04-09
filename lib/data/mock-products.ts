@@ -34,7 +34,6 @@ export const mockProducts: Product[] = [
         stock_quantity: 4,
         low_stock_threshold: 2,
         status: 'active',
-        // main_image: "/images/products/itch-prevention-bar.jpg",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
     },
@@ -50,7 +49,6 @@ export const mockProducts: Product[] = [
         stock_quantity: 4,
         low_stock_threshold: 2,
         status: 'active',
-        // main_image: "/images/products/braiding-bar.jpg",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
     },
@@ -66,7 +64,6 @@ export const mockProducts: Product[] = [
         stock_quantity: 0,
         low_stock_threshold: 2,
         status: 'coming_soon',
-        // main_image: "/images/products/tick-bar.jpg",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
     }

@@ -21,6 +21,8 @@ export const users = pgTable("users", {
 });
 ```
 
+> **Current dashboard auth note:** owner dashboard access is currently controlled in **Clerk user metadata** using `dashboardRole: "admin"` or `dashboardRole: "viewer"`. The `users.isAdmin` column can still be kept for internal or legacy use, but the live fulfillment dashboard uses Clerk-managed roles.
+
 ### Products and Catalog
 
 ```typescript
@@ -98,14 +100,15 @@ export const cartItems = pgTable("cart_items", {
 
 ```typescript
 // lib/db/schema/orders.ts
-import { pgTable, serial, varchar, text, decimal, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, serial, varchar, text, decimal, timestamp, pgEnum, integer } from "drizzle-orm/pg-core";
 
 export const orderStatusEnum = pgEnum("order_status", [
   "pending",
-  "confirmed", 
+  "confirmed",
   "processing",
   "shipped",
   "delivered",
+  "returned",
   "cancelled",
   "refunded"
 ]);
@@ -124,30 +127,35 @@ export const orders = pgTable("orders", {
   userId: varchar("user_id").references(() => users.id).notNull(),
   status: orderStatusEnum("status").default("pending").notNull(),
   paymentStatus: paymentStatusEnum("payment_status").default("pending").notNull(),
-  
+
   // Pricing
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   taxAmount: decimal("tax_amount", { precision: 10, scale: 2 }).default("0").notNull(),
   shippingAmount: decimal("shipping_amount", { precision: 10, scale: 2 }).default("0").notNull(),
   discountAmount: decimal("discount_amount", { precision: 10, scale: 2 }).default("0").notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
-  
+
   // Customer Info (snapshot at time of order)
   customerEmail: varchar("customer_email", { length: 255 }).notNull(),
   customerPhone: varchar("customer_phone", { length: 50 }),
-  
+
   // Addresses (JSON or separate tables)
   shippingAddress: text("shipping_address").notNull(), // JSON string
   billingAddress: text("billing_address").notNull(), // JSON string
-  
+
   // Payment
   paymentMethod: varchar("payment_method", { length: 100 }),
-  paymentReference: varchar("payment_reference", { length: 255 }),
-  
+  paymentReference: varchar("payment_reference", { length: 255 }), // Stripe payment intent ID
+
+  // Fulfillment
+  shippingCarrier: varchar("shipping_carrier", { length: 120 }),
+  trackingNumber: varchar("tracking_number", { length: 120 }),
+  fulfilledAt: timestamp("fulfilled_at"),
+
   // Notes
   customerNotes: text("customer_notes"),
   internalNotes: text("internal_notes"),
-  
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -156,20 +164,20 @@ export const orderItems = pgTable("order_items", {
   id: serial("id").primaryKey(),
   orderId: integer("order_id").references(() => orders.id).notNull(),
   productId: integer("product_id").references(() => products.id).notNull(),
-  variantId: integer("variant_id").references(() => productVariants.id),
-  
+
   // Product snapshot at time of order
   productName: varchar("product_name", { length: 255 }).notNull(),
-  variantName: varchar("variant_name", { length: 255 }),
-  sku: varchar("sku", { length: 100 }),
-  
+  productSku: varchar("product_sku", { length: 100 }),
+
   quantity: integer("quantity").notNull(),
   unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull(),
   totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull(),
-  
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 ```
+
+This order model now supports the lightweight fulfillment dashboard workflow: staff can view new and fulfilled orders, track carrier and tracking details, and mark orders as shipped, returned, or refunded.
 
 ### Customer Addresses
 

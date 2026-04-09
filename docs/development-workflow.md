@@ -41,35 +41,52 @@ npm run type-check
 
 ### 3. Authentication Integration
 
-Every ecommerce feature should consider authentication:
+Every ecommerce feature should consider authentication and authorization.
+
+For the current **static-export storefront + Lambda/API backend** setup:
+
+- **Clerk manages owner logins** for the fulfillment dashboard
+- **Dashboard roles are stored in Clerk metadata** as `dashboardRole: "admin"` or `dashboardRole: "viewer"`
+- **Client-side auth UI** uses Clerk hooks/components in the browser
+- **Protected backend access** is enforced in `server/api/_shared/admin-auth.ts`
 
 ```typescript
-// Server Components - use auth()
-import { auth } from "@clerk/nextjs/server";
+// Client Components - use Clerk in the browser for the dashboard
+import { useAuth, useUser } from "@clerk/react";
 
-export default async function OrderPage() {
-  const { userId } = auth();
-  
-  if (!userId) {
-    redirect("/sign-in");
-  }
-  
-  // Continue with authenticated logic
-}
+export function DashboardGate() {
+  const { isSignedIn, getToken } = useAuth();
+  const { user } = useUser();
 
-// Client Components - use useUser()
-import { useUser } from "@clerk/nextjs";
-
-export function CartButton() {
-  const { user, isSignedIn } = useUser();
-  
   if (!isSignedIn) {
-    return <SignInButton />;
+    return <a href="/sign-in/">Sign in</a>;
   }
-  
-  // Show cart for authenticated user
+
+  // Use the token for protected dashboard API calls
+  async function loadOrders() {
+    const token = await getToken();
+
+    await fetch("/api/admin/orders?bucket=open", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "X-Clerk-User-Id": user?.id ?? "",
+      },
+      credentials: "include",
+    });
+  }
+
+  return <button onClick={() => void loadOrders()}>Load orders</button>;
 }
 ```
+
+For local development of protected APIs:
+
+```bash
+npm run dev:api
+npm run dev
+```
+
+This lets the static frontend call the extracted `server/api/*` handlers locally while preserving the same auth flow used in production.
 
 ### 4. Component Development
 
