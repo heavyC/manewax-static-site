@@ -2,12 +2,13 @@ import { notFound } from "next/navigation";
 import { neon } from "@neondatabase/serverless";
 import { LiveProductDetail } from "@/components/ecommerce/product/live-product-detail";
 import { mockProducts } from "@/lib/data/mock-products";
+import { shouldUseMockProducts } from "@/lib/static-site";
 import { Product } from "@/lib/types/product";
 
 export const dynamicParams = false;
 
 async function getProduct(slug: string): Promise<Product | null> {
-  if (!process.env.DATABASE_URL) {
+  if (shouldUseMockProducts() || !process.env.DATABASE_URL) {
     return mockProducts.find((product) => product.slug === slug) ?? null;
   }
 
@@ -39,7 +40,7 @@ async function getProduct(slug: string): Promise<Product | null> {
 }
 
 export async function generateStaticParams() {
-  if (!process.env.DATABASE_URL) {
+  if (shouldUseMockProducts() || !process.env.DATABASE_URL) {
     return mockProducts.map((product) => ({ slug: product.slug }));
   }
 

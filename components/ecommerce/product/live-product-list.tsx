@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/ecommerce/product/product-card";
-import { buildApiUrl } from "@/lib/static-site";
+import { buildApiUrl, shouldUseMockProducts } from "@/lib/static-site";
 import type { Product } from "@/lib/types/product";
 
 const REFRESH_INTERVAL_MS = 60_000;
@@ -22,11 +22,19 @@ function ProductSkeleton() {
 }
 
 export function LiveProductList({ initialProducts }: { initialProducts: Product[] }) {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const useMockCatalog = shouldUseMockProducts();
+  const [products, setProducts] = useState<Product[]>(useMockCatalog ? initialProducts : []);
+  const [isLoading, setIsLoading] = useState(!useMockCatalog);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (useMockCatalog) {
+      setProducts(initialProducts);
+      setIsLoading(false);
+      setError(null);
+      return;
+    }
+
     let isActive = true;
 
     async function loadProducts() {
@@ -72,7 +80,7 @@ export function LiveProductList({ initialProducts }: { initialProducts: Product[
       isActive = false;
       window.clearInterval(timer);
     };
-  }, [initialProducts]);
+  }, [initialProducts, useMockCatalog]);
 
   if (isLoading) {
     return (

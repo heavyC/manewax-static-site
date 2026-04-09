@@ -3,11 +3,12 @@ import { neon } from "@neondatabase/serverless";
 import { CheckoutSuccessDialog } from "@/components/ecommerce/cart/checkout-success-dialog";
 import { LiveProductList } from "@/components/ecommerce/product/live-product-list";
 import { mockProducts } from "@/lib/data/mock-products";
+import { shouldUseMockProducts } from "@/lib/static-site";
 import { Product } from "@/lib/types/product";
 
 async function getProducts(): Promise<Product[]> {
   try {
-    if (!process.env.DATABASE_URL) {
+    if (shouldUseMockProducts() || !process.env.DATABASE_URL) {
       return mockProducts;
     }
 

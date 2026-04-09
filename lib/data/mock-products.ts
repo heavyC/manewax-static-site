@@ -24,7 +24,7 @@ export const mockCategories = [
 export const mockProducts: Product[] = [
     {
         id: 1,
-        name: "mock Itch Prevention and Repellent Bar",
+        name: "Itch Prevention and Repellent Bar",
         slug: "mane-itch-prevention-and-repellent-bar",
         description: "Hand-crafted conditioning wax that soothes itches and repels insects.",
         price: 34.99,
@@ -39,7 +39,7 @@ export const mockProducts: Product[] = [
     },
     {
         id: 2,
-        name: "mock Lavender Braiding Bar",
+        name: "Lavender Braiding Bar",
         slug: "lavender-braiding-bar",
         description: "Hand-crafted braiding wax with soothing lavendar scent.",
         price: 37.99,
@@ -54,7 +54,7 @@ export const mockProducts: Product[] = [
     },
     {
         id: 2,
-        name: "mock Tick Repellent Bar",
+        name: "Tick Repellent Bar",
         slug: "tick-repellent-bar",
         description: "Hand-crafted tick repellent bar.",
         price: 37.99,
@@ -70,33 +70,3 @@ export const mockProducts: Product[] = [
 ];
 
 
-// const mockFeaturedProducts: Product[] = [
-//   {
-//     id: 1,
-//     name: "Itch Prevention and Repellent Bar",
-//     slug: "itch-prevention-repellent-bar", 
-//     description: "To help with the symptoms of Sweet Itch. Specifically designed to repel stable flies, Culicoides and mosquitoes. Contains lemon eucalyptus and neem. Contains vitamin E to help with regrowth.",
-//     price: 34.99,
-//     sku: "IPR-001",
-//     stock_quantity: 25,
-//     low_stock_threshold: 10,
-//     is_active: true,
-//     category_id: 3,
-//     created_at: new Date().toISOString(),
-//     updated_at: new Date().toISOString(),
-//   },
-//   {
-//     id: 2,
-//     name: "Lavender Braiding Wax",
-//     slug: "lavender-braiding-bar",
-//     description: "Infused with lavender and vitamin E. Lavender promotes relaxation and calming of the nervous system (for horse and rider) and vitamin E to promote hair health and growth.",
-//     price: "37.99", 
-//     sku: "LBB-001",
-//     stock_quantity: 18,
-//     low_stock_threshold: 10,
-//     is_active: true,
-//     category_id: 4,
-//     created_at: new Date().toISOString(),
-//     updated_at: new Date().toISOString(),
-//   }
-// ];

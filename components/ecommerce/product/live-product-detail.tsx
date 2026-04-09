@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { ProductDetailActions } from "@/components/ecommerce/product/product-detail-actions";
-import { buildApiUrl } from "@/lib/static-site";
+import { buildApiUrl, shouldUseMockProducts } from "@/lib/static-site";
 import type { Product } from "@/lib/types/product";
 
 const REFRESH_INTERVAL_MS = 60_000;
@@ -16,10 +16,17 @@ function isProduct(value: Product | { error?: string }): value is Product {
 }
 
 export function LiveProductDetail({ slug, initialProduct }: { slug: string; initialProduct: Product }) {
+  const useMockCatalog = shouldUseMockProducts();
   const [product, setProduct] = useState<Product>(initialProduct);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (useMockCatalog) {
+      setProduct(initialProduct);
+      setError(null);
+      return;
+    }
+
     let isActive = true;
 
     async function loadProduct() {
@@ -58,7 +65,7 @@ export function LiveProductDetail({ slug, initialProduct }: { slug: string; init
       isActive = false;
       window.clearInterval(timer);
     };
-  }, [slug]);
+  }, [initialProduct, slug, useMockCatalog]);
 
   const isComingSoon = product.status === "coming_soon";
   const isOutOfStock = !isComingSoon && product.stock_quantity === 0;
