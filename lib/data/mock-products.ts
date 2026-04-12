@@ -54,7 +54,7 @@ export const mockProducts: Product[] = [
     },
     {
         id: 2,
-        name: "Tick Repellent Bar",
+        name: "Tick Repellent Bar (mock)",
         slug: "tick-repellent-bar",
         description: "Hand-crafted tick repellent bar.",
         price: 37.99,
