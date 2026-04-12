@@ -51,7 +51,7 @@ export default async function Shop() {
         <p className="text-foreground text-center text-2xl font-bold">
           Premium handmade wax products for equine care.
           <br />
-          Veternarian formulated and handmade in small batches.
+          Veterinarian formulated and handmade in small batches.
           <br />
           Trusted by riders, owners, and groomers.
         </p>
