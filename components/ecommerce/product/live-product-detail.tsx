@@ -140,25 +140,25 @@ export function LiveProductDetail({ slug, initialProduct }: { slug: string; init
             </div>
           )}
 
-          <Separator />
+          {/* <Separator /> */}
 
           <div className="space-y-3">
             {product.weight && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Weight</span>
-                <span>{product.weight}</span>
+                {/* <span className="text-muted-foreground">Weight</span> */}
+                {/* <span>{product.weight}</span> */}
               </div>
             )}
             {product.dimensions && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Dimensions</span>
-                <span>{product.dimensions}</span>
+                {/* <span className="text-muted-foreground">Dimensions</span> */}
+                {/* <span>{product.dimensions}</span> */}
               </div>
             )}
             {product.sku && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">SKU</span>
-                <span className="font-mono text-sm">{product.sku}</span>
+                {/* <span className="text-muted-foreground">SKU</span> */}
+                {/* <span className="font-mono text-sm">{product.sku}</span> */}
               </div>
             )}
             <div className="flex justify-between">

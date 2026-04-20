@@ -53,7 +53,7 @@ export default async function Shop() {
           <br />
           Veterinarian formulated and handmade in small batches.
           <br />
-          Trusted by riders, owners, and groomers.
+          Trusted by riders, owners, and grooms.
         </p>
       </div>
 
