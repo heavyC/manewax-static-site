@@ -49,11 +49,9 @@ export default async function Shop() {
 
       <div className="mb-8">
         <p className="text-foreground text-center text-2xl font-bold">
-          Premium handmade wax products for equine care.
+          Premium handmade beeswax products for equine care.
           <br />
           Veterinarian formulated and handmade in small batches.
-          <br />
-          Trusted by riders, owners, and grooms.
         </p>
       </div>
 
