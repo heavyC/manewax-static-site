@@ -42,6 +42,9 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var dbpr=100;if(Math.random()*100>100-dbpr){var d="dbbRum",w=window,o=document,a=addEventListener,scr=o.createElement("script");scr.async=!0;w[d]=w[d]||[];w[d].push(["presampling",dbpr]);["error","unhandledrejection"].forEach(function(t){a(t, function (e) { w[d].push([t, e]) });});scr.src="https://cdn.debugbear.com/Z017oEMltBEK.js";o.head.appendChild(scr);}})()`}} />
+      </head>
       <body className="min-h-full flex flex-col">
         <OptionalClerkProvider>
           <CartProvider>
