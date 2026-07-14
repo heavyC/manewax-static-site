@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { ProductDetailActions } from "@/components/ecommerce/product/product-detail-actions";
 import { buildApiUrl, shouldUseMockProducts } from "@/lib/static-site";
 import type { Product } from "@/lib/types/product";

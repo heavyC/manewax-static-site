@@ -6,6 +6,7 @@ import { CartProvider } from "@/components/ecommerce/cart/cart-provider";
 import { CartSheet } from "@/components/ecommerce/cart/cart-sheet";
 import { AddToCartConfirmationDialog } from "@/components/ecommerce/cart/add-to-cart-confirmation-dialog";
 import { OptionalClerkProvider } from "@/components/auth/optional-clerk-provider";
+import { HeaderNav } from "@/components/site/header-nav";
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
@@ -64,14 +65,7 @@ export default function RootLayout({
                     </Link>
                   </div>
 
-                  <nav className="hidden md:flex items-center justify-self-center space-x-8">
-                    <Link href="/shop" className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors">
-                      Shop
-                    </Link>
-                    <Link href="/information" className="text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors">
-                      Information
-                    </Link>
-                  </nav>
+                  <HeaderNav />
 
                   <div className="flex items-center justify-self-end space-x-3">
                     <Suspense>

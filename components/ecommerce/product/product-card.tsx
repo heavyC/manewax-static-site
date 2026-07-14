@@ -5,9 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { Product } from '@/lib/types/product';
 import { useCart } from '@/components/ecommerce/cart/cart-provider';
+import {ETSY_SHOP_BASE_URL} from '@/lib/constants';
+
 
 interface ProductCardProps {
   product: Product;
@@ -77,14 +79,10 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
       
       <CardFooter className="p-4 pt-0">
-        <Button 
-          className={`w-full ${isOutOfStock ? 'text-destructive!' : ''}`}
-          disabled={isNotPurchasable || isLoading}
-          variant={isNotPurchasable ? "outline" : "default"}
-          onClick={() => void addToCart(cartProduct, 1)}
-        >
-          {isComingSoon ? 'Coming Soon' : isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-        </Button>
+        <Link
+            href={`${ETSY_SHOP_BASE_URL}${product.slug}`}
+            className={buttonVariants({ variant: "default", className: "w-full" })}
+        >View on Etsy</Link>
       </CardFooter>
     </Card>
   );

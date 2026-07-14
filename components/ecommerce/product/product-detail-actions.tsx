@@ -1,7 +1,9 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { useCart } from "@/components/ecommerce/cart/cart-provider";
+import { ETSY_SHOP_BASE_URL } from "@/lib/constants"
+import { buttonVariants } from '@/components/ui/button';
 
 interface ProductDetailActionsProps {
   productId: number;
@@ -50,7 +52,12 @@ export function ProductDetailActions({
 
   return (
     <div className="space-y-3">
-      <Button
+        <Link
+            href={`${ETSY_SHOP_BASE_URL}${productSlug}`}
+            className={buttonVariants({ variant: "default", className: "w-full" })}
+        >View on Etsy</Link>
+
+      {/* <Button
         className="w-full"
         size="lg"
         disabled={isNotPurchasable || isLoading}
@@ -61,7 +68,7 @@ export function ProductDetailActions({
           : isOutOfStock
             ? "Out of Stock"
             : `Add to Cart - $${productPrice}`}
-      </Button>
+      </Button> */}
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );
