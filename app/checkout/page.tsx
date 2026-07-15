@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { buildApiUrl, resolveStaticPromo } from "@/lib/static-site";
-import type { CreateCheckoutSessionResponse, ValidatePromoResponse } from "@/lib/types/checkout";
+import type { ValidatePromoResponse } from "@/lib/types/checkout";
 
 export default function CheckoutPage() {
   const [productId, setProductId] = useState("1");
@@ -86,54 +86,55 @@ export default function CheckoutPage() {
   }
 
   async function handleStartCheckout() {
-    try {
-      setIsSubmitting(true);
-      setErrorMessage("");
+    setIsSubmitting(true);
+    setErrorMessage("Shopping cart is for demonstration purposes only. Please see our Etsy Shop for live purchasing.");
+    setIsSubmitting(false);
 
-      const parsedProductId = Number(productId);
-      const parsedQuantity = Number(quantity);
+    // try {
+    //   const parsedProductId = Number(productId);
+    //   const parsedQuantity = Number(quantity);
 
-      if (!Number.isFinite(parsedProductId) || parsedProductId <= 0) {
-        setErrorMessage("Product ID must be a positive number.");
-        return;
-      }
+    //   if (!Number.isFinite(parsedProductId) || parsedProductId <= 0) {
+    //     setErrorMessage("Product ID must be a positive number.");
+    //     return;
+    //   }
 
-      if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0) {
-        setErrorMessage("Quantity must be a positive number.");
-        return;
-      }
+    //   if (!Number.isFinite(parsedQuantity) || parsedQuantity <= 0) {
+    //     setErrorMessage("Quantity must be a positive number.");
+    //     return;
+    //   }
 
-      const currentUrl = new URL(window.location.href);
-      const params = new URLSearchParams(currentUrl.search);
-      params.set("cart", "open");
-      const query = params.toString();
-      const cancelUrl = `${currentUrl.origin}/shop${query ? `?${query}` : ""}`;
-      const successUrl = `${currentUrl.origin}/checkout/success${currentUrl.search}`;
+    //   const currentUrl = new URL(window.location.href);
+    //   const params = new URLSearchParams(currentUrl.search);
+    //   params.set("cart", "open");
+    //   const query = params.toString();
+    //   const cancelUrl = `${currentUrl.origin}/shop${query ? `?${query}` : ""}`;
+    //   const successUrl = `${currentUrl.origin}/checkout/success${currentUrl.search}`;
 
-      const response = await fetch(buildApiUrl("/checkout/create-session"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: [{ productId: parsedProductId, quantity: parsedQuantity }],
-          promoCode: promoCode.trim() ? promoCode.trim().toUpperCase() : undefined,
-          successUrl,
-          cancelUrl,
-        }),
-      });
+    //   const response = await fetch(buildApiUrl("/checkout/create-session"), {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       items: [{ productId: parsedProductId, quantity: parsedQuantity }],
+    //       promoCode: promoCode.trim() ? promoCode.trim().toUpperCase() : undefined,
+    //       successUrl,
+    //       cancelUrl,
+    //     }),
+    //   });
 
-      const data = (await response.json()) as CreateCheckoutSessionResponse;
+    //   const data = (await response.json()) as CreateCheckoutSessionResponse;
 
-      if (!response.ok || !data.url) {
-        setErrorMessage(data.error ?? "Unable to start checkout.");
-        return;
-      }
+    //   if (!response.ok || !data.url) {
+    //     setErrorMessage(data.error ?? "Unable to start checkout.");
+    //     return;
+    //   }
 
-      window.location.replace(data.url);
-    } catch {
-      setErrorMessage("Unable to start checkout. Configure your checkout API for static hosting.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    //   window.location.replace(data.url);
+    // } catch {
+    //   setErrorMessage("Unable to start checkout. Configure your checkout API for static hosting.");
+    // } finally {
+    //   setIsSubmitting(false);
+    // }
   }
 
   return (

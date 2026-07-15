@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { CartButton } from "@/components/ecommerce/cart/cart-button";
 import { useCart } from "@/components/ecommerce/cart/cart-provider";
+import { ETSY_SHOP_URL } from "@/lib/constants"
 
 export function CartSheet() {
   const router = useRouter();
@@ -155,7 +156,18 @@ export function CartSheet() {
           </div>
           {isApplyingPromo && <p className="text-sm text-muted-foreground">Applying promo code...</p>}
           {promoError && <p className="text-sm text-destructive">{promoError}</p>}
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && (
+            <>
+              <p className="text-sm text-destructive">{error}</p>
+              <p className="text-sm text-muted-foreground">
+                Please see our{" "}
+                <a target="_new" href={ETSY_SHOP_URL} className="underline">
+                  Etsy Shop
+                </a>{" "}
+                for live purchasing.
+              </p>
+            </>
+          )}
           <div className="grid grid-cols-2 gap-2">
             <Button type="button" variant="outline" onClick={() => void clearCart()} disabled={isLoading || items.length === 0}>
               Clear

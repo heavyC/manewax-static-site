@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/components/ecommerce/cart/cart-provider";
 import { ETSY_SHOP_BASE_URL } from "@/lib/constants"
-import { buttonVariants } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 
 interface ProductDetailActionsProps {
   productId: number;
@@ -57,9 +57,10 @@ export function ProductDetailActions({
             className={buttonVariants({ variant: "default", className: "w-full" })}
         >View on Etsy</Link>
 
-      {/* <Button
+      <Button
         className="w-full"
         size="lg"
+        variant={isNotPurchasable ? "outline" : "secondary"}
         disabled={isNotPurchasable || isLoading}
         onClick={() => void handleAddToCart()}
       >
@@ -68,7 +69,7 @@ export function ProductDetailActions({
           : isOutOfStock
             ? "Out of Stock"
             : `Add to Cart - $${productPrice}`}
-      </Button> */}
+      </Button>
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );

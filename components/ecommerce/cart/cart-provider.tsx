@@ -461,47 +461,47 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    setIsCheckingOut(true);
-    setError(null);
+    // setIsCheckingOut(true);
+    setError("Shopping cart is for demonstration purposes only.");
 
-    try {
-      const params = new URLSearchParams(window.location.search);
-      if (options?.openCartOnCancel) {
-        params.set("cart", "open");
-      }
+    // try {
+    //   const params = new URLSearchParams(window.location.search);
+    //   if (options?.openCartOnCancel) {
+    //     params.set("cart", "open");
+    //   }
 
-      const query = params.toString();
-      const cancelUrl = `${window.location.origin}/shop${query ? `?${query}` : ""}`;
-      const successUrl = `${window.location.origin}/checkout/success${window.location.search}`;
-      const persistedPromoCode = window.localStorage.getItem(PROMO_STORAGE_KEY)?.trim().toUpperCase();
+    //   const query = params.toString();
+    //   const cancelUrl = `${window.location.origin}/shop${query ? `?${query}` : ""}`;
+    //   const successUrl = `${window.location.origin}/checkout/success${window.location.search}`;
+    //   const persistedPromoCode = window.localStorage.getItem(PROMO_STORAGE_KEY)?.trim().toUpperCase();
 
-      const response = await fetch(buildApiUrl("/checkout/create-session"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
-          promoCode: appliedPromo?.code ?? persistedPromoCode,
-          successUrl,
-          cancelUrl,
-        }),
-      });
+    //   const response = await fetch(buildApiUrl("/checkout/create-session"), {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
+    //       promoCode: appliedPromo?.code ?? persistedPromoCode,
+    //       successUrl,
+    //       cancelUrl,
+    //     }),
+    //   });
 
-      const data = (await response.json()) as CreateCheckoutSessionResponse;
-      if (!response.ok || !data.url) {
-        setError(
-          data.error ??
-            "Unable to start checkout. Stripe session creation requires a deployed server-side API when the site is hosted on S3."
-        );
-        return;
-      }
+    //   const data = (await response.json()) as CreateCheckoutSessionResponse;
+    //   if (!response.ok || !data.url) {
+    //     setError(
+    //       data.error ??
+    //         "Unable to start checkout. Stripe session creation requires a deployed server-side API when the site is hosted on S3."
+    //     );
+    //     return;
+    //   }
 
-      setIsAddToCartConfirmOpen(false);
-      window.location.replace(data.url);
-    } catch {
-      setError("Unable to start checkout. Configure your checkout API for static hosting.");
-    } finally {
-      setIsCheckingOut(false);
-    }
+    //   setIsAddToCartConfirmOpen(false);
+    //   window.location.replace(data.url);
+    // } catch {
+    //   setError("Unable to start checkout. Configure your checkout API for static hosting.");
+    // } finally {
+    //   setIsCheckingOut(false);
+    // }
   }, [appliedPromo?.code, isApplyingPromo, isCheckingOut, items]);
 
   const discountAmount = useMemo(() => {
